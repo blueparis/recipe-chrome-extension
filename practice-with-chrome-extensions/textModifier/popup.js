@@ -1,4 +1,4 @@
-// Initialize button with user's preferred word replacement
+// Initialize button
 let word1 = document.getElementById("word1");
 let word2 = document.getElementById("word2");
 
@@ -6,6 +6,7 @@ let word2 = document.getElementById("word2");
 // When the button is clicked, call onButtonClick
 word1.addEventListener("click", async () => {
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
     chrome.scripting.executeScript({
         target: { tabId: tab.id },
         function: onButtonClick(word1,tab),
