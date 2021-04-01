@@ -19,9 +19,9 @@ htmlIngredientList.forEach(function (html) {
     let ingredientInfo = html.innerText.trim().split("\n");
     // access right info
     let name = ingredientInfo[2];
-    let measurement = ingredientInfo[0];
+    let amt = ingredientInfo[0];
     // store that info
-    ingredientList[name] = measurement;
+    ingredientList[name] = amt;
 })
 
 console.log(ingredientList)
@@ -36,6 +36,7 @@ console.log(ingredientList)
 
 
 
+
 /*
     START OF:
     Modifying the ingredient list
@@ -46,12 +47,13 @@ console.log(ingredientList)
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     // Handle message.
-    // In this example, message === 'whatever value; String, object, whatever'
+
     console.log(message);
 
     // First, figure out what the message is saying:
     // try to parse message as int or float
         // if it works, then we'll be modifying the ingredient portions
+        // call the reproportion function
     // else, we're either:
         // going to be doing metric conversion
         // or doing substitution
@@ -62,8 +64,48 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
 
 // Re-proportion all ingredients by some multiplier
+    // recognize how we multiplying the ingredient
+    // parse each ingredient amount
+
+    // what to do next:
+        // parse fraction
+        // convert or whatever
+        // get the right fraction
+        // finish making new ingredient list
+        // replace list on page with new list
+
 function reProportion(multiplier){
-    let newIngredientList = [];
+    let newIngredientList = {};
+    Object.entries(ingredientList).forEach(ing => {
+        const [name, amt] = ing;
+        console.log(name, amt);
+
+        // "2 1/4 c." , we wanna double it
+
+        // "2 1/4"  "c."
+
+
+
+        var nonLettersRegex = /[^a-zA-Z]/g;
+        var lettersRegex = /[a-zA-Z]/g;
+        var wordAmt = amt.match(lettersRegex).join("");
+        var numberAmt = amt.match(nonLettersRegex).join("");
+        console.log(numberAmt, wordAmt);
+
+
+        if(numberAmt.includes("/")){
+
+            function fractionToDecimal(fraction) {
+                return fraction
+                    .split('/')
+                    .reduce((numerator, denominator, i) =>
+                        numerator / (i ? denominator : 1)
+                    );
+            }
+        }
+
+    });
+
     // do stuff and update webpage
 }
 

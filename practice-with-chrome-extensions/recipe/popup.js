@@ -29,7 +29,7 @@ double.addEventListener("click", async () => {
     we will do something called "message passing"
     Once the user chooses an option on the popup, we'll communicate that to the
     content-script using message passing.
-    The content-script will wait until it recieves that message,
+    The content-script will wait until it receives that message,
     handle the message, then execute a script in response.
 */
 
