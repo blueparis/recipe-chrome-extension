@@ -5,7 +5,6 @@ console.log('content-script.js')
     START OF:
     Making the ingredient list from the webpage content (for delish.com)
 
-    Eventually, we want to know how to access the ingredient list from at least one other site.
  */
 
 // We know that on delish.com, the ingredients are stored in elements of class "ingredient-item", so:
