@@ -23,7 +23,8 @@ htmlIngredientList.forEach(function (html) {
     ingredientList[name] = amt;
 })
 
-console.log(ingredientList)
+console.log(ingredientList);
+
 
 // console.log(htmlIngredientList);
 
@@ -49,6 +50,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
     console.log(message);
 
+    reProportion(Number(message));
+
+
+
     // First, figure out what the message is saying:
     // try to parse message as int or float
         // if it works, then we'll be modifying the ingredient portions
@@ -63,47 +68,57 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
 
 // Re-proportion all ingredients by some multiplier
-    // recognize how we multiplying the ingredient
-    // parse each ingredient amount
 
-    // what to do next:
-        // parse fraction
-        // convert or whatever
-        // get the right fraction
-        // finish making new ingredient list
-        // replace list on page with new list
+// WHERE WE LEFT OFF 4/15
+    // changed structure of the method:
+        // NOT looking at ingredientList
+        // instead:
+        // for each ingredient amount, isolate number and multiply it
+    // what's left:
+        // configure fraction stuff
+
 
 function reProportion(multiplier){
-    let newIngredientList = {};
-    Object.entries(ingredientList).forEach(ing => {
-        const [name, amt] = ing;
-        console.log(name, amt);
 
-        // "2 1/4 c." , we wanna double it
+    $.each($('.ingredient-amount'), function (){
 
-        // "2 1/4"  "c."
+        // console.log($(this).context.innerHTML);
+        // $(this).context.innerHTML = "mommy's";
 
+        amt = $(this).context.innerHTML;
 
-
-        var nonLettersRegex = /[^a-zA-Z]/g;
+        var nonLettersRegex = /[^a-zA-Z^.]/g;
         var lettersRegex = /[a-zA-Z]/g;
-        var wordAmt = amt.match(lettersRegex).join("");
-        var numberAmt = amt.match(nonLettersRegex).join("");
-        console.log(numberAmt, wordAmt);
-
+        // var wordAmt = amt.match(lettersRegex).join("");
+        var numberAmt = amt.match(nonLettersRegex).join("").trim();
+        // console.log(numberAmt);
 
         if(numberAmt.includes("/")){
 
-            function fractionToDecimal(fraction) {
-                return fraction
-                    .split('/')
-                    .reduce((numerator, denominator, i) =>
-                        numerator / (i ? denominator : 1)
-                    );
-            }
+            // function fractionToDecimal(fraction) {
+            //     return fraction
+            //         .split('/')
+            //         .reduce((numerator, denominator, i) =>
+            //             numerator / (i ? denominator : 1)
+            //         );
+            // }
+
+            console.log('Fraction: ',numberAmt);
+            true;
+
+        }
+        else {
+            let newNum = Number(numberAmt)*multiplier;
+            console.log('Not a fraction: ', numberAmt,newNum);
+
+            $(this).context.innerHTML = newNum;
+
         }
 
+
     });
+
+
 
     // do stuff and update webpage
 }
@@ -127,14 +142,45 @@ function makeSubstitutions(ingredients){
  */
 
 
+// The ultimate plan of this function:
 
-// step 1: find ingredients for allrecipes.com
-// var ingredientJSON = "";
-// find script with ingredient details
-// document.getElementsByTagName("script").forEach( function(script){
-//     if (script.type == "application/ld+json"){
-//         ingredientScript = script;
-//     }
-// })
-// var ingredientList = ingredientJSON[1]["recipeIngredient"];
-// var fractionOfIngredient = ingredientList[1][0].normalize('NFKD').split("\u2044")
+// 1. access the ingredient again
+
+// 2. change either:
+    // 1) measurement
+    // 2) ingredient name OR
+    // 3) measurement AND measurement type
+
+
+
+function makeChanges(newIngredientList){
+    // make the changes to the actual webpage content
+
+
+
+    // let htmlIngredientList = Array.from(document.getElementsByClassName("ingredient-item"));
+
+    // This is a JQuery script, which does the following:
+    // 1. for the entire body of the webpage html (except for scripts), filter by nodeType 3 (Text only)
+    // 2. replace all instances of the current word with the word strikethrough'd and capitalized (cause y not)
+
+    finalIngredients = {"chicken":"1"}
+
+    $.each($('.ingredient-amount'), function (){
+        console.log($(this).context.innerHTML);
+        $(this).context.innerHTML = "test";
+
+
+
+    });
+
+    // console.log($('.ingredient-description').children()[0].innerHTML());
+
+    // $('body :not(script)').contents().filter(function() {
+    //     return this.nodeType === 3;
+    // }).replaceWith(function() {
+    //     return this.nodeValue.replace(wordsToChange[i],`<s>${wordsToChange[i]}</s> <b>${wordToChange.toUpperCase()}</b>`);
+    // });
+
+
+}
