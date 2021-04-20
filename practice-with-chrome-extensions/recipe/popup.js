@@ -34,17 +34,6 @@ double.addEventListener("click", async () => {
 */
 
 function sendMessageToCS(message,tab) {
-    // chrome.tabs.executeScript(
-    //     tab.id,
-    //     function() {
-    //         chrome.tabs.sendMessage(tab.id, message);
-    //     }
-    // );
-    //
-    // chrome.tabs.sendMessage({
-    //     tabId: tab.id,
-    //     message: message
-    // })
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
         chrome.tabs.sendMessage(tab.id, message, function(response) {});
