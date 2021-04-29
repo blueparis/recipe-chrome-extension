@@ -53,10 +53,7 @@ function reProportion(multiplier) {
         var newContext = applyRegexAndMultiply(context, wholeNumberRegex, multiplier);
         // newContext = applyRegexAndMultiply(mixedFractionRegex);
         // newContext = applyRegexAndMultiply(context,fractionRegex);
-
-
         $(this).context.innerHTML = newContext;
-
     });
 }
 
@@ -69,6 +66,7 @@ function applyRegexAndMultiply(context, myRegex, multiplier) {
 
     // split up context into char array, so it's easier to change values of
     let charArray = context.split("");
+    let ogLength = charArray.length;
     console.log("\n\nFOR: ", context);
 
 
@@ -84,37 +82,37 @@ function applyRegexAndMultiply(context, myRegex, multiplier) {
                 .split('/')
                 .reduce((numerator, denominator, i) =>
                     numerator / (i ? denominator : 1)
-                )
-            );
-
+                );
         } else {
-            value = Number(value);
+            if (value.includes(" ")){
+                value = Number(value.toString().trim());
+                match.index++;
+            }
+            else{
+                value = Number(value);
+            }
         }
 
+        // ANOTHER PROBLEM:
+        // preceding conversions in an ingredient string (e.g. in string "5 tb and 3 tsp", 5 tb will be converted before 3 tsp)
+        // may affect following conversions because the index of the string will be changed.
+        // we try to account for that here.
+        let shift = charArray.length - ogLength;
+        let startIX = match.index + shift;
+        let endIX = myRegex.lastIndex + shift;
 
         // multiply value
-
         let newValue = (value * multiplier).toString();
         if (newValue.includes(".")){
             newValue = convertToFraction(newValue);
         }
 
-        // the regex.exec() function has some nice attributes
-        // .index : the starting index of the current match
-        // .lastIndex : the last index of the current match
-        let startIX = match.index;
-        let endIX = myRegex.lastIndex;
-        // when "matches" are >9 (aka >1 chars), for some reason regex.exec() gets the starting index wrong by 1.
-        // we account for that here
-        if (value > 9) {
-            startIX++;
-        }
 
         // I learned that sometimes we need to "offset" the charArray to make room for a bigger number
         // i.e. if our value was 5 and our newValue is 10, then we need to account for 1 new char ("0")
         // so, we set an offset value and pop as much room in as we need
-
-        let offset = (newValue.length - match[0].length);
+        // DOESN'T ACCOUNT FOR 10 -> 5 :/
+        let offset = newValue.length - value.toString().length+1;
         if (offset > 0) {
             charArray = (charArray.join("").substring(0, startIX + 1)
                 + " ".repeat(offset)
@@ -125,7 +123,7 @@ function applyRegexAndMultiply(context, myRegex, multiplier) {
         // update the right element in the charArray accordingly
         for (let i = 0; i < newValue.length; i++) {
             charArray[startIX + i] = newValue[i];
-
+            console.log("new charArray",charArray);
         }
     }
 
