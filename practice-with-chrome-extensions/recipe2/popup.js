@@ -1,5 +1,5 @@
 // Add listener for "half" button.
-// If clicked, tell content-script
+// If clicked, tell content-script by calling .executeScript
 let half = document.getElementById("half");
 half.addEventListener("click", async () => {
     let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
@@ -11,8 +11,8 @@ half.addEventListener("click", async () => {
 });
 
 
-// Add listener for "half" button.
-// If clicked, tell content-script
+// Add listener for "double" button.
+// If clicked, tell content-script by calling .executeScript
 let double = document.getElementById("double");
 double.addEventListener("click", async () => {
     let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
