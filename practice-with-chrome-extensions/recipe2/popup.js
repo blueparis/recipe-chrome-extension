@@ -1,26 +1,25 @@
-
 // Add listener for "half" button.
-// If clicked, tell content-script
+// If clicked, tell content-script by calling .executeScript
 let half = document.getElementById("half");
 half.addEventListener("click", async () => {
-    let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
 
     chrome.scripting.executeScript({
-        target: {tabId:tab.id},
-        function: sendMessageToCS(".5",tab)
+        target: {tabId: tab.id},
+        function: sendMessageToCS(".5", tab)
     });
 });
 
 
-// Add listener for "half" button.
-// If clicked, tell content-script
+// Add listener for "double" button.
+// If clicked, tell content-script by calling .executeScript
 let double = document.getElementById("double");
 double.addEventListener("click", async () => {
-    let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
 
     chrome.scripting.executeScript({
-        target: {tabId:tab.id},
-        function: sendMessageToCS('2',tab)
+        target: {tabId: tab.id},
+        function: sendMessageToCS('2', tab)
     })
 })
 
@@ -33,10 +32,11 @@ double.addEventListener("click", async () => {
     handle the message, then execute a script in response.
 */
 
-function sendMessageToCS(message,tab) {
+function sendMessageToCS(message, tab) {
 
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-        chrome.tabs.sendMessage(tab.id, message, function(response) {});
+    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+        chrome.tabs.sendMessage(tab.id, message, function (response) {
+        });
     });
 
 
